@@ -4,9 +4,9 @@ import { useApp } from '../App';
 import './dashboard.css';
 
 const SUBJECTS = [
-  { id: 1, emoji: '🔬', title: 'Ipa', topic: 'Biologi Sel', progress: 55, xp: 210, color: '#F0FDF4' },
-  { id: 2, emoji: '🌍', title: 'Bahasa Indonesia', topic: 'Teks Narasi', progress: 83, xp: 410, color: '#FFF7ED' },
-  { id: 3, emoji: '🌐', title: 'Bahasa Inggris', topic: 'Reading Comprehension', progress: 61, xp: 290, color: '#F0F9FF' },
+  { id: 1, emoji: '🔬', title: 'Ipa', topic: 'Biologi Sel', progress: 55, xp: 210, color: '#F0FDF4', route: '/materi/ipa' },
+  { id: 2, emoji: '🌍', title: 'Bahasa Indonesia', topic: 'Teks Narasi', progress: 83, xp: 410, color: '#FFF7ED', route: '/materi/bahasa-indonesia' },
+  { id: 3, emoji: '🌐', title: 'Bahasa Inggris', topic: 'Reading Comprehension', progress: 61, xp: 290, color: '#F0F9FF', route: '/materi/bahasa-inggris' },
 ];
 
 const ACTIVITIES = [
@@ -23,7 +23,6 @@ const Dashboard = () => {
   const [ttsText, setTtsText] = useState('');
   const [ttsReading, setTtsReading] = useState(false);
 
-  // --- PERBAIKAN VARIABEL (Agar tidak Black Screen) ---
   const totalXP = user?.xp || 125;
   const level = user?.level || 3;
   const nextLevelXP = level * 200;
@@ -176,7 +175,10 @@ const Dashboard = () => {
                     <span>Progress: {s.progress}%</span>
                     <span>{s.xp} XP</span>
                   </div>
-                  <button className="subj-btn" onClick={() => speak(`Melanjutkan materi ${s.title}`)}>
+                  <button className="subj-btn" onClick={() => {
+                    speak(`Melanjutkan materi ${s.title}`);
+                    navigate(s.route, { state: { title: s.title, topic: s.topic } });
+                  }}>
                     Lanjutkan →
                   </button>
                 </div>

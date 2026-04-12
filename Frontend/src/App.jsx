@@ -4,6 +4,9 @@ import LandingPage from "./pages/landingPage";
 import Login from "./pages/auth/login";
 import Register from "./pages/auth/register";
 import Dashboard from "./pages/dashboard";
+import MateriIPA from "./MateriIPA";
+import MateriBahasaIndonesia from "./MateriBahasaIndonesia";
+import MateriBahasaInggris from "./MateriBahasaInggris";
 
 export const AppContext = createContext(null);
 export function useApp() { return useContext(AppContext); }
@@ -32,19 +35,14 @@ function App() {
     localStorage.setItem("fs_tts", ttsEnabled ? "1" : "0");
   }, [ttsEnabled]);
 
-  const login = () => {
-    <div style={{ padding: "50px", textAlign: "center" }}>
-      <h1>Halaman Pendaftaran</h1>
-      <p>Mari bergabung dengan FlexiStudy!</p>
-      <a href="/">Kembali ke Beranda</a>  
-    </div>
+  const login = (userData) => {
+    setUser(userData);
+    localStorage.setItem("fs_user", JSON.stringify(userData));
   };
 
-  const register = () => {
-    <div style={{ padding: "50px", textAlign: "center" }}>
-      <h1>Halaman Login</h1>
-      <a href="/">Kembali ke Beranda</a>
-    </div>
+  const register = (userData) => {
+    setUser(userData);
+    localStorage.setItem("fs_user", JSON.stringify(userData));
   };
 
   const logout = () => {
@@ -71,6 +69,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/materi/ipa" element={<MateriIPA />} />
+          <Route path="/materi/bahasa-indonesia" element={<MateriBahasaIndonesia />} />
+          <Route path="/materi/bahasa-inggris" element={<MateriBahasaInggris />} />
         </Routes>
       </Router>
     </AppContext.Provider>

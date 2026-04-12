@@ -1,39 +1,37 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+import sqlite3
 
 router = APIRouter()
 
-# Schema untuk data yang dikirim client
 class DataUser(BaseModel):
     email: str
     password: str
 
-# Simulasi Database (Daftar user yang diperbolehkan login)
-# Di dunia nyata, ini nanti berasal dari tabel di PostgreSQL/MySQL/MongoDB
-fake_users_db = [
-    {"email": "user1@example.com", "password": "password123"},
-    {"email": "budi@gmail.com", "password": "rahasiabudi"},
-    {"email": "clara@kerja.com", "password": "securepassword"}
-]
+def get_db():
+    conn = sqlite3.connect("app.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 
 @router.post("/login")
 async def login_user(user: DataUser):
-    print(f"Percobaan login dari: {user.email}")
+    conn = get_db()
+    cursor = conn.cursor()
 
-    # Mencari user di dalam 'database' kita
-    user_found = None
-    for u in fake_users_db:
-        if u["email"] == user.email:
-            user_found = u
-            break
+    cursor.execute("SELECT * FROM users WHERE email = ?", (user.email,))
+    user_found = cursor.fetchone()
+    conn.close()
 
-    # Cek apakah user ada DAN passwordnya cocok
-    if user_found and user_found["password"] == user.password:
-        return {
-            "status": "sukses", 
-            "pesan": f"Selamat datang kembali, {user.email}!",
-            "data": {"email": user.email}
+    if not user_found or user_found["password"] != user.password:
+        raise HTTPException(status_code=401, detail="Email atau password salah!")
+
+    return {
+        "status": "sukses",
+        "pesan": f"Selamat datang {user_found['nama_depan']}!",
+        "data": {
+            "email": user_found["email"],
+            "nama_depan": user_found["nama_depan"],
+            "nama_belakang": user_found["nama_belakang"],
+            "kelas": user_found["kelas"],
         }
-    
-    # Jika tidak cocok, lempar error 401 (Unauthorized)
-    raise HTTPException(status_code=401, detail="Email atau password salah!")
+    }
