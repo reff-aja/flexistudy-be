@@ -1,18 +1,23 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useApp } from '../App';
 import "./MateriDetail.css";
 
 const IPAMateriDetail = () => {
   const { state } = useLocation();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <div className="materi-container">
+
       {/* HEADER */}
-      <h2 className="materi-title">
-        {state?.title || "Materi IPA"}
-      </h2>
-      <p className="materi-meta">Topik: {state?.topic || "Ilmu Pengetahuan Alam"}</p>
-      <p className="materi-meta">ID: {id}</p>
+      <div className="materi-header-card">
+        <h2 className="materi-title">
+          {state?.title || "Materi IPA"}
+        </h2>
+        <p className="materi-meta">Topik: {state?.topic || "Ilmu Pengetahuan Alam"}</p>
+        <p className="materi-meta">ID: {id}</p>
+      </div>
 
       <hr />
 
@@ -155,6 +160,17 @@ const IPAMateriDetail = () => {
       <p className="content-text">
         Kloroplas melakukan fotosintesis.
       </p>
+
+      {/* NAVIGATION BOTTOM */}
+      <div className="materi-nav-bottom">
+        <button className="btn-nav btn-back" onClick={() => navigate('/dashboard')}>
+          <span className="btn-nav-icon">←</span> Kembali
+        </button>
+        <button className="btn-nav btn-next" onClick={() => navigate('/dashboard')}>
+          Lanjutkan <span className="btn-nav-icon">→</span>
+        </button>
+      </div>
+
     </div>
   );
 };

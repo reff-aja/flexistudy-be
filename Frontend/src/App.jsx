@@ -4,9 +4,9 @@ import LandingPage from "./pages/landingPage";
 import Login from "./pages/auth/login";
 import Register from "./pages/auth/register";
 import Dashboard from "./pages/dashboard";
-import MateriIPA from "./MateriIPA";
-import MateriBahasaIndonesia from "./MateriBahasaIndonesia";
-import MateriBahasaInggris from "./MateriBahasaInggris";
+import MateriIPA from "./pages/MateriIPA";
+import MateriBahasaIndonesia from "./pages/MateriBahasaIndonesia";
+import MateriBahasaInggris from "./pages/MateriBahasaInggris";
 
 export const AppContext = createContext(null);
 export function useApp() { return useContext(AppContext); }

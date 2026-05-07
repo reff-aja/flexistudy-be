@@ -1,18 +1,23 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useApp } from '../App';
 import "./MateriDetail.css"; // pakai CSS yang sama biar konsisten
 
 const EnglishMateriDetail = () => {
   const { state } = useLocation();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <div className="materi-container">
+
       {/* HEADER */}
-      <h2 className="materi-title">
-        {state?.title || "English Material"}
-      </h2>
-      <p className="materi-meta">Topic: {state?.topic || "English"}</p>
-      <p className="materi-meta">ID: {id}</p>
+      <div className="materi-header-card">
+        <h2 className="materi-title">
+          {state?.title || "English Material"}
+        </h2>
+        <p className="materi-meta">Topic: {state?.topic || "English"}</p>
+        <p className="materi-meta">ID: {id}</p>
+      </div>
 
       <hr />
 
@@ -37,7 +42,7 @@ const EnglishMateriDetail = () => {
 
       <h3 className="sub-title">3. Simple Sentences</h3>
       <p className="content-text">
-        Example: "This is a cat", "I like apples", "I don’t like milk".
+        Example: "This is a cat", "I like apples", "I don't like milk".
       </p>
 
       <h3 className="sub-title">4. Imperative Sentences</h3>
@@ -136,6 +141,17 @@ const EnglishMateriDetail = () => {
       <p className="content-text">
         Passive voice, conditional sentences, direct & indirect speech.
       </p>
+
+      {/* NAVIGATION BOTTOM */}
+      <div className="materi-nav-bottom">
+        <button className="btn-nav btn-back" onClick={() => navigate('/dashboard')}>
+          <span className="btn-nav-icon">←</span> Kembali
+        </button>
+        <button className="btn-nav btn-next" onClick={() => navigate('/dashboard')}>
+          Lanjutkan <span className="btn-nav-icon">→</span>
+        </button>
+      </div>
+
     </div>
   );
 };
