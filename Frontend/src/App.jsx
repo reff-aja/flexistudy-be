@@ -11,10 +11,6 @@ import MateriBahasaInggris from "./pages/MateriBahasaInggris";
 export const AppContext = createContext(null);
 export function useApp() { return useContext(AppContext); }
 
-const FAKE_USERS = [
-  { email: "sari@email.com", password: "password", name: "Sari Amelia", kelas: "Kelas 10 SMA" },
-];
-
 function App() {
   const [user, setUser] = useState(() => {
     try { return JSON.parse(localStorage.getItem("fs_user")) || null; } catch { return null; }

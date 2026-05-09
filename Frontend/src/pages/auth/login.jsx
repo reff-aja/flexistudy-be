@@ -1,40 +1,56 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useApp } from '../../App';
 import './Auth.css';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useApp(); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
+    setLoading(true);
+
     try {
       const response = await fetch('http://127.0.0.1:8000/login', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ email: email, password: password }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      // ✅ FIX: Ganti 'data' jadi 'res' (variabelnya 'res', bukan 'data')
       if (data.status === "sukses") {
-        alert("Berhasil: " + data.pesan);
-        localStorage.setItem("user_nama", data.nama);
+        login({
+          name: data.data.nama,
+          email: data.data.email,
+          kelas: data.data.kelas,
+          xp: data.data.xp,
+          level: data.data.level,
+          streak: data.data.streak,
+          progress_ipa: data.data.progress_ipa,
+          progress_b_indonesia: data.data.progress_b_indonesia,
+          progress_b_inggris: data.data.progress_b_inggris,
+        });
+
+        if (data.xp_bonus > 0) {
+          alert(`🔥 Login streak: ${data.data.streak} hari! +${data.xp_bonus} XP`);
+        }
         navigate("/dashboard");
       } else {
-        alert("Gagal: " + data.detail || data.pesan);
+        alert("Gagal: " + (data.detail || data.pesan));
       }
     } catch (error) {
-      console.error(error);
       alert("Gagal konek ke server! Pastikan FastAPI sudah jalan.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    // ✅ FIX: Hapus div auth-container duplikat
     <div className="auth-container fade-in">
       <div className="panel">
         <div className="panel-label">Login</div>
@@ -67,8 +83,8 @@ const Login = () => {
           
           <div className="forgot">Lupa password?</div>
           
-          <button type="submit" onClick={handleLogin} className="btn-full">
-            Masuk ke FlexiStudy
+          <button onClick={handleLogin} className="btn-full" disabled={loading}>
+            {loading ? "Memuat..." : "Masuk ke FlexiStudy"}
           </button>
 
           <div className="switch">

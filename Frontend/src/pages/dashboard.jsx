@@ -1,13 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../App';
 import './dashboard.css';
-
-const SUBJECTS = [
-  { id: 1, emoji: '🔬', title: 'Ipa', topic: 'Biologi Sel', progress: 55, xp: 210, color: '#F0FDF4', route: '/materi/ipa' },
-  { id: 2, emoji: '🌍', title: 'Bahasa Indonesia', topic: 'Teks Narasi', progress: 83, xp: 410, color: '#FFF7ED', route: '/materi/bahasa-indonesia' },
-  { id: 3, emoji: '🌐', title: 'Bahasa Inggris', topic: 'Reading Comprehension', progress: 61, xp: 290, color: '#F0F9FF', route: '/materi/bahasa-inggris' },
-];
 
 const ACTIVITIES = [
   { emoji: '✅', text: 'Menyelesaikan latihan Aljabar — Bab 3', time: '2 jam lalu', xp: '+20 XP' },
@@ -17,14 +11,38 @@ const ACTIVITIES = [
 ];
 
 const Dashboard = () => {
-  const { user, logout, darkMode, setDarkMode, ttsEnabled, setTtsEnabled, highContrast, setHighContrast, speak } = useApp();
+  const { user, login, logout, darkMode, setDarkMode, ttsEnabled, setTtsEnabled, highContrast, setHighContrast, speak } = useApp();
   const navigate = useNavigate();
+  const [activities, setActivities] = useState([]);
+  useEffect(() => {
+    if (!user?.email) return;
+    fetch(`http://127.0.0.1:8000/aktivitas/${user.email}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "sukses") setActivities(data.data);
+      })
+      .catch(e => console.error(e));
+  }, [user?.email]);
+
+  const SUBJECTS = [
+    { id: 1, emoji: '🔬', title: 'IPA', topic: 'Biologi Sel',
+      progress: user?.progress_ipa || 0, xp: 210,
+      color: '#F0FDF4', route: '/materi/ipa', subject: 'ipa' },
+    { id: 2, emoji: '🌍', title: 'Bahasa Indonesia', topic: 'Teks Narasi',
+      progress: user?.progress_b_indonesia || 0, xp: 410,
+      color: '#FFF7ED', route: '/materi/bahasa-indonesia', subject: 'b_indonesia' },
+    { id: 3, emoji: '🌐', title: 'Bahasa Inggris', topic: 'Reading Comprehension',
+      progress: user?.progress_b_inggris || 0, xp: 290,
+      color: '#F0F9FF', route: '/materi/bahasa-inggris', subject: 'b_inggris' },
+  ];
+
   const [activeTab, setActiveTab] = useState('beranda');
   const [ttsText, setTtsText] = useState('');
   const [ttsReading, setTtsReading] = useState(false);
 
-  const totalXP = user?.xp || 125;
-  const level = user?.level || 3;
+  const totalXP = user?.xp || 0;
+  const level = user?.level || 1;
+  const streak = user?.streak || 0; 
   const nextLevelXP = level * 200;
   const xpPercent = Math.min(100, Math.round((totalXP / nextLevelXP) * 100));
   const initials = (user?.name || 'U').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
@@ -45,7 +63,6 @@ const Dashboard = () => {
 
   return (
     <div className="dash-page">
-      {/* Sidebar */}
       <aside className="sidebar">
         <div className="sb-logo">
           <div className="li">
@@ -83,9 +100,7 @@ const Dashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="dash-main">
-        {/* Header */}
         <div className="dash-header">
           <div>
             <div className="dash-greeting">Halo, {(user?.name || "Teman Belajar").split(' ')[0]}! 👋</div>
@@ -109,7 +124,7 @@ const Dashboard = () => {
             <div className="stat-row">
               <StatCard icon="⚡" label="Total XP" value={totalXP} />
               <StatCard icon="🏅" label="Level" value={level} />
-              <StatCard icon="🔥" label="Streak" value="7 hari" />
+              <StatCard icon="🔥" label="Streak" value={`${streak} hari`} />
               <StatCard icon="📊" label="Progress Minggu" value={`${weekProgress}%`} />
             </div>
 
@@ -144,14 +159,21 @@ const Dashboard = () => {
 
             <div className="section-title">🕐 Aktivitas Terbaru</div>
             <div className="activity-list">
-              {ACTIVITIES.map((a, i) => (
-                <div key={i} className="act-item">
-                  <span className="act-icon">{a.emoji}</span>
-                  <span className="act-text">{a.text}</span>
-                  <span className="act-time">{a.time}</span>
-                  <span className="act-xp">{a.xp}</span>
+              {activities.length === 0 ? (
+                <div className="act-item">
+                  <span className="act-icon">📭</span>
+                  <span className="act-text">Belum ada aktivitas. Ayo mulai belajar!</span>
                 </div>
-              ))}
+              ) : (
+                activities.map((a, i) => (
+                  <div key={i} className="act-item">
+                    <span className="act-icon">{a.emoji}</span>
+                    <span className="act-text">{a.text}</span>
+                    <span className="act-time">{a.time}</span>
+                    <span className="act-xp">{a.xp}</span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -175,8 +197,30 @@ const Dashboard = () => {
                     <span>Progress: {s.progress}%</span>
                     <span>{s.xp} XP</span>
                   </div>
-                  <button className="subj-btn" onClick={() => {
+                  <button className="subj-btn" onClick={async () => {
                     speak(`Melanjutkan materi ${s.title}`);
+                    try {
+                      const res = await fetch('http://127.0.0.1:8000/progress', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          email: user.email,
+                          subject: s.subject,
+                          nilai: Math.min(100, (s.progress || 0) + 5),
+                        }),
+                      });
+                      const data = await res.json();
+                      if (data.status === "sukses") {
+                        login({
+                          ...user,
+                          xp: data.xp,
+                          level: data.level,
+                          progress_ipa: data.progress_ipa,
+                          progress_b_indonesia: data.progress_b_indonesia,
+                          progress_b_inggris: data.progress_b_inggris,
+                        });
+                      }
+                    } catch (e) { console.error(e); }
                     navigate(s.route, { state: { title: s.title, topic: s.topic } });
                   }}>
                     Lanjutkan →
