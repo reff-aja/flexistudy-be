@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useApp } from '../App';
 import '../App.css';
+import logo from '../assets/logo.png';
 
 const LandingPage = () => {
   const { user, darkMode, setDarkMode, ttsEnabled, setTtsEnabled, highContrast, setHighContrast, speak, logout } = useApp();
@@ -23,19 +24,9 @@ const LandingPage = () => {
       <nav className="nav">
         <div className="logo">
           <div className="li">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M7 1L11.5 4V10L7 13L2.5 10V4L7 1Z" stroke="#fff" strokeWidth="1.5" />
-              <circle cx="7" cy="7" r="2" fill="#fff" />
-            </svg>
+              <img src={logo} alt="FlexiStudy Logo" style={{ height: '86px', objectFit: 'contain' }} />
           </div>
           <span className="ln">Flexi<span>Study</span></span>
-        </div>
-
-        <div className="nav-links">
-          <span onClick={() => speak("Fitur FlexiStudy")}>Fitur</span>
-          <span onClick={() => speak("Materi tersedia")}>Materi</span>
-          <span onClick={() => speak("Harga FlexiStudy")}>Harga</span>
-          <span onClick={() => speak("Tentang FlexiStudy")}>Tentang</span>
         </div>
 
         <div className="nb">
@@ -131,10 +122,9 @@ const LandingPage = () => {
             </div>
             <div className="bar"><div className="bf" style={{ width: '68%' }}></div></div>
             <div className="subs">
-              <SubjectItem emoji="📐" title="Matematika" desc="Aljabar · 72%" bg="#EEF2FF" />
-              <SubjectItem emoji="🔬" title="Sains" desc="Biologi · 55%" bg="#F0FDF4" />
-              <SubjectItem emoji="🌍" title="Bahasa Ind." desc="Narasi · 83%" bg="#FFF7ED" />
-              <SubjectItem emoji="🎵" title="Seni Budaya" desc="Musik · 40%" bg="#FDF4FF" />
+              <SubjectItem emoji="📗" title="Bahasa Inggris" desc="Aljabar · 72%" bg="#EEF2FF" />
+              <SubjectItem emoji="🔬" title="Ipa" desc="Biologi · 55%" bg="#F0FDF4" />
+              <SubjectItem emoji="🌍" title="Bahasa Indonesia" desc="Narasi · 83%" bg="#FFF7ED" />
             </div>
           </div>
           <div className="fbadge">
