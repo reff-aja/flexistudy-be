@@ -144,6 +144,10 @@ async def get_aktivitas(email: str, db: Session = Depends(get_db)):
         ]
     }
 
+@app.get("/")
+async def root():
+    return {"status": "backend aktif"}
+
 if __name__ == "__main__":
     import uvicorn
     import os
