@@ -85,9 +85,6 @@ const LandingPage = () => {
             <Link to="/register" className="bpl" onClick={() => speak("Mulai belajar gratis sekarang!")}>
               Mulai Belajar Gratis
             </Link>
-            <button className="bsl" onClick={() => { speak("Demo FlexiStudy. Platform belajar adaptif nomor satu di Indonesia."); navigate(user ? '/dashboard' : '/login'); }}>
-              Lihat Demo
-            </button>
           </div>
           <div className="stats">
             <div>
