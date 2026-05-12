@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 20px 200px;
+  padding: 0 20px 20px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 12px;
 }
@@ -452,4 +452,128 @@
   .dash-main { padding: 16px; }
   .subject-grid { grid-template-columns: 1fr; }
   .stat-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE MOBILE
+═══════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* SIDEBAR — jadi bottom navbar di HP */
+  .dash-page {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    flex-direction: row;
+    padding: 8px 12px;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    z-index: 999;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Sembunyikan logo & user info di mobile */
+  .sb-logo { display: none; }
+  .sb-user { display: none; }
+
+  /* Nav jadi horizontal */
+  .sb-nav {
+    flex-direction: row;
+    gap: 0;
+    padding: 0;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .sb-item {
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 10px;
+    font-size: 10px;
+    border-radius: 8px;
+    align-items: center;
+    flex: 1;
+  }
+
+  .sb-item span:first-child {
+    font-size: 20px;
+  }
+
+  /* Main content beri ruang untuk bottom navbar */
+  .dash-main {
+    padding: 16px 14px 80px;
+  }
+
+  /* Header */
+  .dash-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .dash-greeting {
+    font-size: 20px;
+  }
+
+  .dash-header-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Stats grid jadi 2 kolom */
+  .stat-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 14px 10px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  /* Subject grid jadi 1 kolom */
+  .subject-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* XP Card */
+  .xp-card {
+    padding: 14px;
+  }
+
+  /* Activity */
+  .act-item {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .act-time {
+    font-size: 10px;
+  }
+
+  /* Section badge jenjang */
+  .sb-badge-jenjang {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .dash-greeting { font-size: 17px; }
+  .stat-value { font-size: 16px; }
+  .sb-item { font-size: 9px; padding: 6px 6px; }
 }

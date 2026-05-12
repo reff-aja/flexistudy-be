@@ -192,3 +192,34 @@
   .auth-right { padding: 24px 16px; }
   .auth-card { padding: 28px 20px; }
 }
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 16px;
+    min-height: 100vh;
+    align-items: flex-start;
+  }
+
+  .card {
+    padding: 24px 18px;
+    border-radius: 16px;
+  }
+
+  .panel {
+    width: 100%;
+  }
+
+  .row2 {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .finput {
+    font-size: 16px; /* hindari zoom otomatis di iOS */
+  }
+
+  .btn-full {
+    padding: 14px;
+    font-size: 14px;
+  }
+}
