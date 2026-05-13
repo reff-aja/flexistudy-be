@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [activities, setActivities] = useState([]);
   useEffect(() => {
     if (!user?.email) return;
-    fetch(`http://127.0.0.1:8000/aktivitas/${user.email}`)
+    fetch(`https://flexistudy-be-production-f89d.up.railway.app${user.email}`)
       .then(res => res.json())
       .then(data => {
         if (data.status === "sukses") setActivities(data.data);
