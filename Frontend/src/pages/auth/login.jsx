@@ -15,7 +15,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://flexistudy-be-production-f89d.up.railway.app', {
+      const response = await fetch('${process.env.REACT_APP_API_URL}/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
